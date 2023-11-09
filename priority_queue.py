@@ -39,14 +39,14 @@ class AdaptablePriorityQueue(MinHeap):
         self._sift_up(len(self) - 1)
         return token
 
-    def update(self, locator: Locator, key, value):
+    def update(self, locator: Locator, new_key, new_value):
         index = locator.index
 
         if not (0 <= index < len(self) and self._elements[index] is locator):
             raise ValueError("Invalid locator")
 
-        locator.key = key
-        locator.value = value
+        locator.key = new_key
+        locator.value = new_value
         self._bubble(index)
 
     def remove(self, locator: Locator):
