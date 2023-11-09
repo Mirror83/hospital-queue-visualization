@@ -1,4 +1,5 @@
 import sys
+from tkinter import messagebox
 
 import pygame as pg
 from pygame import Vector2
@@ -7,31 +8,35 @@ from priority_queue import AdaptablePriorityQueue
 from text_button import TextButton
 from text_input import TextInput
 
-pg.init()
-screen = pg.display.set_mode(Vector2(1000, 600))
 
-clock = pg.time.Clock()
-MAX_FPS = 60
+def on_add():
+    try:
+        key = int(text_input_list[0].text)
+        value = text_input_list[1].text
+        index_locator_dict[key] = pq.add(key, value)
+        print(pq)
+        print(index_locator_dict)
 
-text_input_list = [
-    TextInput(top_left=Vector2(150, 100), size=Vector2(50, 30), font_size=30),
-    TextInput(top_left=Vector2(250, 100), size=Vector2(100, 30), font_size=30)
-]
+    except ValueError:
+        if messagebox.showerror(
+                "Invalid input",
+                "Only pass in numeric values for key") == "ok":
+            text_input_list[0].clear()
 
-focused_input: TextInput | None = None
-exists_focused_input = False
 
-text_button_list = [
-    TextButton(
-        text="Add",
-        top_left=Vector2(10, 100),
-        on_click_handler=lambda: print("Clicked"),
-        font_size=30
-    )
-]
+def on_update():
+    try:
+        old_key = int(text_input_list[2].text)
+        new_key = int(text_input_list[3].text)
+        pq.update(index_locator_dict[old_key], new_key, index_locator_dict[old_key].value)
+        # TODO: Update index_locator_map
 
-index_locator_dict: dict[int, AdaptablePriorityQueue.Locator] = dict()
-pq = AdaptablePriorityQueue()
+        print(pq)
+        print(index_locator_dict)
+
+    except ValueError:
+        if messagebox.showerror("Invalid input", "Only pass in numeric values for key") == "ok":
+            text_input_list[0].clear()
 
 
 def insert(key, value):
@@ -42,9 +47,72 @@ def remove(key):
     try:
         pq.remove(index_locator_dict[key])
         index_locator_dict.pop(key)
-    except ValueError as e:
-        print("The object with this key does not exist")
+    except ValueError:
+        print(f"The object with the key {key} does not exist")
 
+
+pg.init()
+screen = pg.display.set_mode(Vector2(1000, 700))
+
+clock = pg.time.Clock()
+MAX_FPS = 60
+
+KEY_TEXT_INPUT_SIZE = Vector2(50, 30)
+VALUE_TEXT_INPUT_SIZE = Vector2(100, 30)
+text_input_list = [
+    TextInput(top_left=Vector2(50, 400), size=KEY_TEXT_INPUT_SIZE, font_size=30),
+    TextInput(top_left=Vector2(150, 400), size=VALUE_TEXT_INPUT_SIZE, font_size=30),
+
+    TextInput(top_left=Vector2(50, 450), size=KEY_TEXT_INPUT_SIZE, font_size=30),
+    TextInput(top_left=Vector2(150, 450), size=KEY_TEXT_INPUT_SIZE, font_size=30),
+
+    TextInput(top_left=Vector2(50, 500), size=KEY_TEXT_INPUT_SIZE, font_size=30),
+    TextInput(top_left=Vector2(150, 500), size=VALUE_TEXT_INPUT_SIZE, font_size=30),
+]
+
+focused_input: TextInput | None = None
+exists_focused_input = False
+
+index_locator_dict: dict[int, AdaptablePriorityQueue.Locator] = dict()
+pq = AdaptablePriorityQueue()
+
+text_button_list = [
+    TextButton(
+        text="Add",
+        top_left=Vector2(270, 400),
+        on_click_handler=on_add,
+        font_size=30,
+        color="Blue"
+    ),
+    TextButton(
+        text="Change priority",
+        top_left=Vector2(270, 450),
+        on_click_handler=on_add,
+        font_size=30,
+        color="Blue"
+    ),
+    TextButton(
+        text="Remove",
+        top_left=Vector2(270, 500),
+        on_click_handler=on_add,
+        font_size=30,
+        color="Blue"
+    ),
+    TextButton(
+        text="Remove min",
+        top_left=Vector2(470, 400),
+        on_click_handler=on_add,
+        font_size=30,
+        color="Blue"
+    ),
+    TextButton(
+        text="Min",
+        top_left=Vector2(470, 450),
+        on_click_handler=on_add,
+        font_size=30,
+        color="Blue"
+    )
+]
 
 while True:
     for event in pg.event.get():
