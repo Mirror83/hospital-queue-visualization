@@ -52,6 +52,7 @@ def remove(key):
 
 
 pg.init()
+pg.display.set_caption("hospital-queue-visualization")
 screen = pg.display.set_mode(Vector2(1000, 700))
 
 clock = pg.time.Clock()
