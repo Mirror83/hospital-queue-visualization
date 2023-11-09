@@ -54,7 +54,13 @@ def remove(key):
 
 pg.init()
 pg.display.set_caption("hospital-queue-visualization")
-screen = pg.display.set_mode(Vector2(1000, 700))
+SCREEN_SIZE = Vector2(800, 600)
+
+screen = pg.display.set_mode(SCREEN_SIZE)
+
+sky_surface = pg.image.load("./assets/graphics/sky.png")
+sky_rectangle = sky_surface.get_rect()
+sky_rectangle.topleft = Vector2(0, 0)
 
 clock = pg.time.Clock()
 MAX_FPS = 60
@@ -80,7 +86,6 @@ for i in range(len(text_inputs)):
     rect.topleft = text_inputs[i].input_rectangle.bottomleft
     labels.append(Label(label_text_list[i], rect))
 
-
 focused_input: TextInput | None = None
 exists_focused_input = False
 
@@ -90,38 +95,45 @@ pq = AdaptablePriorityQueue()
 text_buttons = [
     TextButton(
         text="Add",
-        top_left=Vector2(270, 400),
+        top_left=Vector2(250, 400),
         on_click_handler=on_add,
         font_size=30,
-        color="Blue"
+        color="Black"
     ),
     TextButton(
         text="Change priority",
-        top_left=Vector2(270, 450),
+        top_left=Vector2(250, 450),
         on_click_handler=on_add,
         font_size=30,
-        color="Blue"
+        color="Black"
     ),
     TextButton(
         text="Remove",
-        top_left=Vector2(270, 500),
+        top_left=Vector2(250, 500),
         on_click_handler=on_add,
         font_size=30,
-        color="Blue"
+        color="Black"
     ),
     TextButton(
         text="Remove min",
         top_left=Vector2(470, 400),
         on_click_handler=on_add,
         font_size=30,
-        color="Blue"
+        color="Black"
     ),
     TextButton(
         text="Min",
         top_left=Vector2(470, 450),
         on_click_handler=on_add,
         font_size=30,
-        color="Blue"
+        color="Black"
+    ),
+    TextButton(
+        text="len",
+        top_left=Vector2(470, 500),
+        on_click_handler=on_add,
+        font_size=30,
+        color="Black"
     )
 ]
 
@@ -141,6 +153,11 @@ while True:
                     button.click()
 
     screen.fill("White")
+    screen.blit(sky_surface, sky_rectangle)
+
+    # Horizontal line separating the visualization section and the manipulation section
+    pg.draw.line(screen, "Black", Vector2(0, SCREEN_SIZE.y / 2), Vector2(SCREEN_SIZE.x, SCREEN_SIZE.y / 2), 2)
+
     for text_input in text_inputs:
         if text_input.has_focus():
             exists_focused_input = True
