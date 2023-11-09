@@ -17,7 +17,7 @@ class Label:
             rect: Rect,
             padding_top: int = 0,
             font_size: int = 20,
-            color: Color | int | str | tuple[int, int, int] | Sequence[int] = "Grey",
+            color: Color | int | str | tuple[int, int, int] | Sequence[int] = "darkgrey",
             alignment: Alignment = Alignment.LEFT
     ):
         self.text = text
