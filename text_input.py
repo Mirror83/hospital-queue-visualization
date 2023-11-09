@@ -51,13 +51,16 @@ class TextInput:
             self.text = self.text[:-1]
             self.update_text_box_size()
         elif event_key == pg.K_RETURN:
-            self.text = ""
+            self.clear()
             self._on_enter()
-            self.update_text_box_size()
         else:
             if text.isprintable():
                 self.text += text
                 self.update_text_box_size()
+
+    def clear(self):
+        self.text = ""
+        self.update_text_box_size()
 
     def update_text_box_size(self):
         self.font_surface = self.font.render(self.text, True, self.text_color).convert_alpha()
