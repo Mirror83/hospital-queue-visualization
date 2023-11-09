@@ -1,17 +1,28 @@
-from typing import Callable, Literal
+from typing import Callable, Union, Sequence
 
 import pygame as pg
-from pygame import Vector2, Rect, Cursor, SYSTEM_CURSOR_ARROW, SYSTEM_CURSOR_HAND, Surface
+from pygame import Vector2, Rect, Cursor, SYSTEM_CURSOR_ARROW, SYSTEM_CURSOR_HAND, Surface, Color
 from pygame.font import Font
 
 
 class TextButton:
-    def __init__(self, text: str, top_left: Vector2, on_click_handler: Callable[[], None], font_size: int):
+    def __init__(
+            self,
+            text: str,
+            top_left: Vector2,
+            on_click_handler: Callable[[], None],
+            font_size: int,
+            color: Union[Color, int, str, tuple[int, int, int], Sequence[int]]
+    ):
         self.text = text
         self.font = Font(None, font_size)
-        self.color: Literal["Black", "Purple", "Red"] = "Black"
+        self.default_color = color
+        self.hover_color = "Purple"
+        self.color = self.default_color
+
         self.font_surface = self.font.render(self.text, True, self.color).convert_alpha()
         self.rect = Rect(top_left, self.font_surface.get_size())
+
         self.on_click_handler = on_click_handler
         self.cursors = [Cursor(SYSTEM_CURSOR_ARROW), Cursor(SYSTEM_CURSOR_HAND)]
         self.cursor = self.cursors[0]
@@ -29,12 +40,12 @@ class TextButton:
 
     def check_hover(self):
         if self.is_hover():
-            self.color = "Purple"
+            self.color = self.hover_color
             if self.cursor != self.cursors[1]:
                 self.cursor = self.cursors[1]
                 pg.mouse.set_cursor(self.cursor)
         else:
-            self.color = "Black"
+            self.color = self.default_color
             if self.cursor != self.cursors[0]:
                 self.cursor = self.cursors[0]
                 pg.mouse.set_cursor(self.cursor)
