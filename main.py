@@ -2,8 +2,9 @@ import sys
 from tkinter import messagebox
 
 import pygame as pg
-from pygame import Vector2
+from pygame import Vector2, Rect
 
+from label import Label
 from priority_queue import AdaptablePriorityQueue
 from text_button import TextButton
 from text_input import TextInput
@@ -11,8 +12,8 @@ from text_input import TextInput
 
 def on_add():
     try:
-        key = int(text_input_list[0].text)
-        value = text_input_list[1].text
+        key = int(text_inputs[0].text)
+        value = text_inputs[1].text
         index_locator_dict[key] = pq.add(key, value)
         print(pq)
         print(index_locator_dict)
@@ -21,13 +22,13 @@ def on_add():
         if messagebox.showerror(
                 "Invalid input",
                 "Only pass in numeric values for key") == "ok":
-            text_input_list[0].clear()
+            text_inputs[0].clear()
 
 
 def on_update():
     try:
-        old_key = int(text_input_list[2].text)
-        new_key = int(text_input_list[3].text)
+        old_key = int(text_inputs[2].text)
+        new_key = int(text_inputs[3].text)
         pq.update(index_locator_dict[old_key], new_key, index_locator_dict[old_key].value)
         # TODO: Update index_locator_map
 
@@ -36,7 +37,7 @@ def on_update():
 
     except ValueError:
         if messagebox.showerror("Invalid input", "Only pass in numeric values for key") == "ok":
-            text_input_list[0].clear()
+            text_inputs[0].clear()
 
 
 def insert(key, value):
@@ -60,16 +61,25 @@ MAX_FPS = 60
 
 KEY_TEXT_INPUT_SIZE = Vector2(50, 30)
 VALUE_TEXT_INPUT_SIZE = Vector2(100, 30)
-text_input_list = [
+text_inputs = [
     TextInput(top_left=Vector2(50, 400), size=KEY_TEXT_INPUT_SIZE, font_size=30),
-    TextInput(top_left=Vector2(150, 400), size=VALUE_TEXT_INPUT_SIZE, font_size=30),
+    TextInput(top_left=Vector2(120, 400), size=VALUE_TEXT_INPUT_SIZE, font_size=30),
 
     TextInput(top_left=Vector2(50, 450), size=KEY_TEXT_INPUT_SIZE, font_size=30),
-    TextInput(top_left=Vector2(150, 450), size=KEY_TEXT_INPUT_SIZE, font_size=30),
+    TextInput(top_left=Vector2(120, 450), size=KEY_TEXT_INPUT_SIZE, font_size=30),
 
     TextInput(top_left=Vector2(50, 500), size=KEY_TEXT_INPUT_SIZE, font_size=30),
-    TextInput(top_left=Vector2(150, 500), size=VALUE_TEXT_INPUT_SIZE, font_size=30),
+    TextInput(top_left=Vector2(120, 500), size=VALUE_TEXT_INPUT_SIZE, font_size=30),
 ]
+
+label_text_list = ["key", "value", "key", "new key", "key", "value"]
+labels = []
+
+for i in range(len(text_inputs)):
+    rect = Rect(Vector2(0, 0), Vector2(text_inputs[i].size))
+    rect.topleft = text_inputs[i].input_rectangle.bottomleft
+    labels.append(Label(label_text_list[i], rect))
+
 
 focused_input: TextInput | None = None
 exists_focused_input = False
@@ -77,7 +87,7 @@ exists_focused_input = False
 index_locator_dict: dict[int, AdaptablePriorityQueue.Locator] = dict()
 pq = AdaptablePriorityQueue()
 
-text_button_list = [
+text_buttons = [
     TextButton(
         text="Add",
         top_left=Vector2(270, 400),
@@ -126,12 +136,12 @@ while True:
                 focused_input.update_text(event.key, event.unicode)
 
         if event.type == pg.MOUSEBUTTONUP:
-            for button in text_button_list:
+            for button in text_buttons:
                 if event.button == pg.BUTTON_LEFT and button.is_hover():
                     button.click()
 
     screen.fill("White")
-    for text_input in text_input_list:
+    for text_input in text_inputs:
         if text_input.has_focus():
             exists_focused_input = True
             focused_input = text_input
@@ -141,8 +151,11 @@ while True:
     if not exists_focused_input:
         focused_input = None
 
-    for button in text_button_list:
+    for button in text_buttons:
         button.render(screen)
+
+    for label in labels:
+        label.render(screen)
 
     pg.display.flip()
     clock.tick(MAX_FPS)
