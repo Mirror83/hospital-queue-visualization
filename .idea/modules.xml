@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/hospital_queue_visualiztion.iml" filepath="$PROJECT_DIR$/.idea/hospital_queue_visualiztion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../hospital_queue_visualization/.idea/hospital_queue_visualization.iml" filepath="$PROJECT_DIR$/../hospital_queue_visualization/.idea/hospital_queue_visualization.iml" />
     </modules>
   </component>
 </project>
