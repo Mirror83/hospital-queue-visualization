@@ -1,4 +1,4 @@
-from typing import Callable, Union, Sequence
+from typing import Callable, Sequence
 
 import pygame as pg
 from pygame import Vector2, Rect, Cursor, SYSTEM_CURSOR_ARROW, SYSTEM_CURSOR_HAND, Surface, Color
@@ -12,7 +12,7 @@ class TextButton:
             top_left: Vector2,
             on_click_handler: Callable[[], None],
             font_size: int,
-            color: Union[Color, int, str, tuple[int, int, int], Sequence[int]]
+            color: Color | int | str | tuple[int, int, int] | Sequence[int]
     ):
         self.text = text
         self.font = Font(None, font_size)
