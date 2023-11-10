@@ -35,8 +35,8 @@ class AdaptablePriorityQueue(MinHeap):
     def add(self, key, value):
         token = self.Locator(key, value, len(self))
         self._elements.append(token)
+        self._sift_up(len(self))
         self._count += 1
-        self._sift_up(len(self) - 1)
         return token
 
     def update(self, locator: Locator, new_key, new_value):
@@ -65,3 +65,8 @@ class AdaptablePriorityQueue(MinHeap):
             self._bubble(index)  # Fix item displaced from swap
 
         return locator.key, locator.value
+
+    def remove_min(self):
+        old_min = self._remove_min_helper()
+        return old_min.key, old_min.value, old_min.index
+
