@@ -70,3 +70,20 @@ class AdaptablePriorityQueue(MinHeap):
         old_min = self._remove_min_helper()
         return old_min.key, old_min.value, old_min.index
 
+    def locators(self):
+        return self._elements.__iter__()
+
+    def string_sequential(self):
+        output = "["
+        j = 0
+
+        for element in self:
+            if j < len(self) - 1:
+                output += f"{str(element)}, "
+            else:
+                output += str(element)
+            j += 1
+
+        output += "]"
+
+        return output
