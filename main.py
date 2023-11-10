@@ -5,6 +5,7 @@ import pygame as pg
 from pygame import Vector2, Rect
 
 from label import Label
+from patient import PatientData, Patient
 from priority_queue import AdaptablePriorityQueue
 from text_button import TextButton
 from text_input import TextInput
@@ -14,24 +15,27 @@ def update_key_locator_dict():
     key_locator_dict.clear()
     for locator in pq.locators():
         key_locator_dict[locator.key] = locator
+        key_locator_dict[locator.key].value.key = locator.key
 
 
 def print_updates(tag: str = ""):
     if tag:
         print(f"{tag}: {pq}")
         print(f"{tag}: sequential - {pq.string_sequential()}")
-        print(f"{tag}: {key_locator_dict}")
+        # print(f"{tag}: {key_locator_dict}")
     else:
         print(pq)
         print("sequential - " + pq.string_sequential())
-        print(key_locator_dict)
+        # print(key_locator_dict)
 
 
 def on_add():
     try:
         key = int(text_inputs[0].text)
         value = text_inputs[1].text
-        key_locator_dict[key] = pq.add(key, value)
+
+        key_locator_dict[key] = pq.add(key, PatientData(key, value))
+
         print_updates(tag="on_add")
 
         text_inputs[0].clear()
@@ -118,6 +122,7 @@ def on_is_empty():
 pg.init()
 pg.display.set_caption("hospital-queue-visualization")
 SCREEN_SIZE = Vector2(800, 600)
+GROUND_HEIGHT = SCREEN_SIZE.y / 2
 
 screen = pg.display.set_mode(SCREEN_SIZE)
 
@@ -227,6 +232,11 @@ while True:
 
     # Horizontal line separating the visualization section and the manipulation section
     pg.draw.line(screen, "Black", Vector2(0, SCREEN_SIZE.y / 2), Vector2(SCREEN_SIZE.x, SCREEN_SIZE.y / 2), 2)
+
+    i = 0
+    for _, patient_data, _ in pq:
+        Patient(patient_data, Vector2(200 + i * 120, GROUND_HEIGHT)).render(screen)
+        i += 1
 
     for text_input in text_inputs:
         if text_input.has_focus():
