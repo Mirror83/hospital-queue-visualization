@@ -57,6 +57,14 @@ class MinHeap:
          and the value of the removed item
         :raises: `EmptyHeapException`
         """
+        old_min = self._remove_min_helper()
+
+        return old_min.key, old_min.value
+
+    def _remove_min_helper(self):
+        """
+        Helper that performs the removes the item with minimum key
+        and returns a reference to the minimum value storage class object"""
         if self.is_empty():
             raise self.EmptyHeapException
 
@@ -67,8 +75,7 @@ class MinHeap:
 
         self._count -= 1
         self._sift_down(0)
-
-        return old_min.key, old_min.value
+        return old_min
 
     def min(self):
         """
