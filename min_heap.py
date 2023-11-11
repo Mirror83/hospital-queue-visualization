@@ -19,7 +19,7 @@ class MinHeap:
         def __repr__(self):
             return f"({self.key}, {self.value})"
 
-    class EmptyHeapException:
+    class EmptyHeapException(Exception):
         def __init__(self, msg="Cannot perform operation on an empty heap"):
             super().__init__()
             self.msg = msg
@@ -66,7 +66,7 @@ class MinHeap:
         Helper that performs the removes the item with minimum key
         and returns a reference to the minimum value storage class object"""
         if self.is_empty():
-            raise self.EmptyHeapException
+            raise self.EmptyHeapException()
 
         new_min = self._elements[self._count - 1]
         old_min = self._elements[0]
@@ -119,7 +119,7 @@ class MinHeap:
         if left_index < len(self) and \
                 self._elements[parent_index].key > self._elements[left_index].key:
             index_of_smallest = left_index
-        elif right_index < len(self) and \
+        if right_index < len(self) and \
                 self._elements[parent_index].key > self._elements[right_index].key:
             index_of_smallest = right_index
 
