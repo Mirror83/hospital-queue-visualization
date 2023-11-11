@@ -12,7 +12,8 @@ class TextButton:
             top_left: Vector2,
             on_click_handler: Callable[[], None],
             font_size: int,
-            color: Color | int | str | tuple[int, int, int] | Sequence[int]
+            color: Color | int | str | tuple[int, int, int] | Sequence[int],
+            offsets: Vector2 = Vector2(0, 0)
     ):
         self.text = text
         self.font = Font(None, font_size)
@@ -22,6 +23,7 @@ class TextButton:
 
         self.font_surface = self.font.render(self.text, True, self.color).convert_alpha()
         self.rect = Rect(top_left, self.font_surface.get_size())
+        self.offsets = offsets
 
         self.on_click_handler = on_click_handler
         self.cursors = [Cursor(SYSTEM_CURSOR_ARROW), Cursor(SYSTEM_CURSOR_HAND)]
@@ -34,7 +36,10 @@ class TextButton:
 
     def is_hover(self):
         mouse_pos = Vector2(pg.mouse.get_pos())
-        # mouse_pos.x -= Menu.MOUSE_OFFSET  # To account for positioning relative to menu Surface
+        # To account for positioning relative to surface
+        mouse_pos.x -= self.offsets.x
+        mouse_pos.y -= self.offsets.y
+
         is_hover = self.rect.collidepoint(mouse_pos)
         return is_hover
 
