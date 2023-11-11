@@ -2,7 +2,6 @@ import dataclasses
 
 from pygame import Rect, Vector2, Surface
 from pygame.font import Font
-import pygame as pg
 
 
 @dataclasses.dataclass
@@ -12,14 +11,13 @@ class PatientData:
 
 
 class Patient:
-    def __init__(self, data: PatientData, mid_bottom: Vector2):
+    def __init__(self, data: PatientData, mid_bottom: Vector2, image: Surface):
         super().__init__()
+        self.image = image
         self.data = data
-        self.size = Vector2(50, 100)
 
-        self.rect = Rect((0, 0), self.size)
+        self.rect = Rect(Vector2(0, 0), self.image.get_size())
         self.rect.midbottom = mid_bottom
-        self.rect_color = "Red"
 
         self.font = Font(None, 30)
         self.text_color = "darkgrey"
@@ -35,5 +33,5 @@ class Patient:
 
     def render(self, surface: Surface):
         self.init_font_surface(f"({self.data.key}, {self.data.name})")
-        pg.draw.rect(surface, self.rect_color, self.rect)
+        surface.blit(self.image, self.rect)
         surface.blit(self.font_surface, self.font_rectangle)
