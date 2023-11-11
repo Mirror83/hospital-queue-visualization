@@ -20,6 +20,6 @@ the app is unresponsive if the Tkinter dialog is not dismissed promptly.
 This animation should also be run after a priority change.
 
 > [!NOTE]
-> When a dialog pops up, the other items are still focusable; but the `TextButtons` do nothing when pressed but
-> input is still recorded by the `TextInputs`. This is something that I may or may not resolve, since it is quite
+> When a dialog pops up, the other items are still focusable; but the `TextButton`s do nothing when pressed but
+> input is still recorded by the `TextInput`s. This is something that I may or may not resolve, since it is quite
 > discouraging to have to create UI elements (in pygame) when other frameworks handle it quite easily.
