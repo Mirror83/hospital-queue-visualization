@@ -20,7 +20,7 @@ the app was unresponsive if the Tkinter dialog was not dismissed promptly.
 This animation should also be run after a priority change.
 - [ ] **Additional** - Improve overall aesthetics
 - **Important, but additional** - Make `TextButton`s and `TextInput`s listen for input and events independent of the
-- event loop in main.py
+event loop in main.py
 
 > [!NOTE]
 > When a dialog pops up, the other items are still focusable; but the `TextButton`s do nothing when pressed but
