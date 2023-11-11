@@ -11,13 +11,14 @@ thoroughly tested)
 
 ### Remaining Tasks
 This is a high-level description of what is yet to be done.
-- [ ] Draw the hospital
-- [ ] Draw patients as graphics, not rectangles
-- [ ] Polish the entry controls 
-- [x] Manage dialogs from within pygame instead of from Tkinter. The current approach makes the OS think 
-the app is unresponsive if the Tkinter dialog is not dismissed promptly.
+- [x] Draw the hospital
+- [x] Draw patients as graphics, not rectangles
+- [x] Manage dialogs from within pygame instead of from Tkinter. The previous approach made the OS think
+the app is unresponsive if the Tkinter dialog was not dismissed promptly.
+- [ ] Polish the entry controls
 - [ ] **Additional** - Animate the patients to walk as they get into the queue at their correct positions.
 This animation should also be run after a priority change.
+- [ ] **Additional** - Improve overall aesthetics
 
 > [!NOTE]
 > When a dialog pops up, the other items are still focusable; but the `TextButton`s do nothing when pressed but
