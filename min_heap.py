@@ -142,7 +142,7 @@ class MinHeap:
 
 
 class _MinHeapIterator:
-    """Used to get all  the elements of a min heap in increasing order without altering the min heap"""
+    """Used to get all the elements of a min heap in increasing order without altering the min heap"""
 
     def __init__(self, min_heap: MinHeap):
         self._min_heap = min_heap
