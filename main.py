@@ -1,14 +1,24 @@
 import sys
-from tkinter import messagebox
 
 import pygame as pg
 from pygame import Vector2, Rect
 
+from dialog import Dialog
 from label import Label
 from patient import PatientData, Patient
 from priority_queue import AdaptablePriorityQueue
 from text_button import TextButton
 from text_input import TextInput
+
+
+def remove_dialog():
+    global is_dialog_showing
+    is_dialog_showing = False
+
+
+def show_dialog():
+    global is_dialog_showing
+    is_dialog_showing = True
 
 
 def update_key_locator_dict():
@@ -41,11 +51,11 @@ def on_add():
         text_inputs[0].clear()
         text_inputs[1].clear()
 
-    except ValueError:
-        if messagebox.showerror(
-                "Invalid input",
-                "Key should be an integer") == "ok":
-            text_inputs[0].clear()
+    except ValueError as e:
+        print(f"on_add: {e}")
+        dialog.set_message("Key should be an integer")
+        show_dialog()
+        text_inputs[0].clear()
 
 
 def on_update():
@@ -60,62 +70,90 @@ def on_update():
             text_inputs[2].clear()
             text_inputs[3].clear()
         else:
+            dialog.set_message("The queue is empty.")
+            show_dialog()
             print(f"change_priority: The queue is empty!")
 
-    except ValueError:
-        if messagebox.showerror("Invalid input", "Key should be an integer") == "ok":
-            text_inputs[2].clear()
-            text_inputs[3].clear()
+    except ValueError as e:
+        print(f"change_priority: {e}")
+        dialog.set_message("Key should be an integer")
+        show_dialog()
+        text_inputs[2].clear()
+        text_inputs[3].clear()
 
-    except KeyError:
-        if messagebox.showerror("Invalid key", "There is no member with the key given") == "ok":
-            text_inputs[2].clear()
-            text_inputs[3].clear()
+    except KeyError as e:
+        print(f"change_priority: {e}")
+        dialog.set_message("There is no patient with the key given")
+        show_dialog()
+        text_inputs[2].clear()
+        text_inputs[3].clear()
 
 
 def on_remove():
+    global is_dialog_showing
     try:
         if not pq.is_empty():
             key = int(text_inputs[4].text)
-            pq.remove(key_locator_dict[key])
+            _, value = pq.remove(key_locator_dict[key])
+            dialog.set_message(f"({value.key}, {value.name})")
+            show_dialog()
             update_key_locator_dict()
             print_updates(tag="on_remove")
 
             text_inputs[4].clear()
         else:
+            dialog.set_message("There is no patient to remove!")
+            show_dialog()
+            text_inputs[4].clear()
             print("on_remove: There is nothing to remove!")
 
-    except ValueError:
-        if messagebox.showerror("Invalid input", "Key should be an integer") == "ok":
-            text_inputs[4].clear()
+    except ValueError as e:
+        print(f"on_remove: {e}")
+        dialog.set_message("The key should be an integer!")
+        show_dialog()
+        text_inputs[4].clear()
 
-    except KeyError:
-        if messagebox.showerror("Invalid key", "There is no member with the key given") == "ok":
-            text_inputs[2].clear()
-            text_inputs[3].clear()
+    except KeyError as e:
+        print(f"on_remove: {e}")
+        dialog.set_message("There is no patient with the key given")
+        show_dialog()
+        text_inputs[4].clear()
 
 
 def on_remove_min():
     if not pq.is_empty():
-        pq.remove_min()
+        key, value, _ = pq.remove_min()
+        dialog.set_message(f"({key}, {value.name})")
+        show_dialog()
         update_key_locator_dict()
         print_updates(tag="on_remove_min")
     else:
-        print("There is nothing to remove!")
+        print("on_remove_min: There is nothing to remove!")
+        dialog.set_message("There is nothing to remove!")
+        show_dialog()
 
 
 def on_min():
     if not pq.is_empty():
+        minimum = key_locator_dict[pq.min()[0]].value
+        dialog.set_message(f"({minimum.key}, {minimum.name})")
+        show_dialog()
         print(f"min={key_locator_dict[pq.min()[0]]}")
     else:
+        dialog.set_message("The queue is empty.")
+        show_dialog()
         print("min: The queue is empty!")
 
 
 def on_len():
+    dialog.set_message(f"len = {len(pq)}")
+    show_dialog()
     print(f"len={len(pq)}")
 
 
 def on_is_empty():
+    dialog.set_message(f"is_empty = {pq.is_empty()}")
+    show_dialog()
     print(f"is_empty={pq.is_empty()}")
 
 
@@ -159,57 +197,19 @@ exists_focused_input = False
 
 key_locator_dict: dict[int, AdaptablePriorityQueue.Locator] = dict()
 pq = AdaptablePriorityQueue()
+dialog = Dialog(SCREEN_SIZE, on_dismiss=remove_dialog)
+is_dialog_showing = False
 
 text_buttons = [
-    TextButton(
-        text="Add",
-        top_left=Vector2(250, 400),
-        on_click_handler=on_add,
-        font_size=30,
-        color="Black"
-    ),
-    TextButton(
-        text="Change priority",
-        top_left=Vector2(250, 450),
-        on_click_handler=on_update,
-        font_size=30,
-        color="Black"
-    ),
-    TextButton(
-        text="Remove",
-        top_left=Vector2(250, 500),
-        on_click_handler=on_remove,
-        font_size=30,
-        color="Black"
-    ),
-    TextButton(
-        text="Remove min",
-        top_left=Vector2(450, 400),
-        on_click_handler=on_remove_min,
-        font_size=30,
-        color="Black"
-    ),
-    TextButton(
-        text="Min",
-        top_left=Vector2(450, 450),
-        on_click_handler=on_min,
-        font_size=30,
-        color="Black"
-    ),
-    TextButton(
-        text="len",
-        top_left=Vector2(450, 500),
-        on_click_handler=on_len,
-        font_size=30,
-        color="Black"
-    ),
-    TextButton(
-        text="is_empty",
-        top_left=Vector2(620, 400),
-        on_click_handler=on_is_empty,
-        font_size=30,
-        color="Black"
-    )
+    TextButton(text="Add", top_left=Vector2(250, 400), on_click_handler=on_add, font_size=30, color="Black"),
+    TextButton(text="Change priority", top_left=Vector2(250, 450), on_click_handler=on_update, font_size=30,
+               color="Black"),
+    TextButton(text="Remove", top_left=Vector2(250, 500), on_click_handler=on_remove, font_size=30, color="Black"),
+    TextButton(text="Remove min", top_left=Vector2(450, 400), on_click_handler=on_remove_min, font_size=30,
+               color="Black"),
+    TextButton(text="Min", top_left=Vector2(450, 450), on_click_handler=on_min, font_size=30, color="Black"),
+    TextButton(text="len", top_left=Vector2(450, 500), on_click_handler=on_len, font_size=30, color="Black"),
+    TextButton(text="is_empty", top_left=Vector2(620, 400), on_click_handler=on_is_empty, font_size=30, color="Black")
 ]
 
 while True:
@@ -223,9 +223,13 @@ while True:
                 focused_input.update_text(event.key, event.unicode)
 
         if event.type == pg.MOUSEBUTTONUP:
-            for button in text_buttons:
-                if event.button == pg.BUTTON_LEFT and button.is_hover():
-                    button.click()
+            if is_dialog_showing:
+                if dialog.dismiss_button.is_hover():
+                    dialog.click_dismissed_button()
+            else:
+                for button in text_buttons:
+                    if event.button == pg.BUTTON_LEFT and button.is_hover():
+                        button.click()
 
     screen.fill("White")
     screen.blit(sky_surface, sky_rectangle)
@@ -253,6 +257,9 @@ while True:
 
     for label in labels:
         label.render(screen)
+
+    if is_dialog_showing and dialog is not None:
+        dialog.render(screen)
 
     pg.display.flip()
     clock.tick(MAX_FPS)
