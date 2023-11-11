@@ -22,7 +22,7 @@ class Patient:
         self.rect_color = "Red"
 
         self.font = Font(None, 30)
-        self.text_color = "Black"
+        self.text_color = "darkgrey"
         self.font_surface = self.font.render(f"({data.key}, {data.name})", True, self.text_color)
         self.font_rectangle = self.font_surface.get_rect()
         self.font_rectangle.midbottom = self.rect.midtop
