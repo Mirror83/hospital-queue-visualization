@@ -7,6 +7,7 @@ from dialog import Dialog
 from label import Label
 from patient import PatientData, Patient
 from priority_queue import AdaptablePriorityQueue
+from sprite_extractor import SpriteExtractor
 from text_button import TextButton
 from text_input import TextInput
 
@@ -171,9 +172,19 @@ MAX_FPS = 60
 
 # Background setup
 GROUND_HEIGHT = SCREEN_SIZE.y / 2
-sky_surface = pg.image.load("./assets/graphics/sky.png")
-sky_rectangle = sky_surface.get_rect()
+bg_surface = pg.image.load("./assets/graphics/sky.png")
+sky_rectangle = bg_surface.get_rect()
 sky_rectangle.topleft = Vector2(0, 0)
+
+# Sprite setup
+sprite_sheet = pg.image.load("./assets/graphics/statics.png").convert_alpha()
+hospital_surface = (SpriteExtractor(sprite_sheet)
+                    .extract_portion_from(Vector2(0, 80), Vector2(80, 65)))
+hospital_surface = pg.transform.scale2x(hospital_surface)
+hospital_rect = hospital_surface.get_rect()
+hospital_rect.bottomleft = Vector2(0, GROUND_HEIGHT)
+
+stick_man_surface = pg.image.load("./assets/graphics/man-stand.png").convert_alpha()
 
 # TextInput setup
 KEY_TEXT_INPUT_SIZE = Vector2(50, 30)
@@ -219,6 +230,10 @@ text_buttons = [
     TextButton(text="is_empty", top_left=Vector2(620, 400), on_click_handler=on_is_empty, font_size=30, color="Black")
 ]
 
+# Patient setup
+PATIENT_START = Vector2(250, GROUND_HEIGHT)
+PATIENT_SEP = 120  # Represents the distance between two successive patients
+
 # Game loop
 while True:
     for event in pg.event.get():
@@ -240,14 +255,18 @@ while True:
                         button.click()
 
     screen.fill("White")
-    screen.blit(sky_surface, sky_rectangle)
+    screen.blit(bg_surface, sky_rectangle)
+    screen.blit(hospital_surface, hospital_rect)
 
     # Horizontal line separating the visualization section and the manipulation section
     pg.draw.line(screen, "Black", Vector2(0, GROUND_HEIGHT), Vector2(SCREEN_SIZE.x, GROUND_HEIGHT), 2)
 
     i = 0
     for _, patient_data, _ in pq:
-        Patient(patient_data, Vector2(200 + i * 120, GROUND_HEIGHT)).render(screen)
+        Patient(
+            patient_data,
+            Vector2(PATIENT_START.x + i * PATIENT_SEP, PATIENT_START.y),
+            stick_man_surface).render(screen)
         i += 1
 
     for text_input in text_inputs:
