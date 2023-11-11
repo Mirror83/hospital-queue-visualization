@@ -21,5 +21,5 @@ This animation should also be run after a priority change.
 
 > [!NOTE]
 > When a dialog pops up, the other items are still focusable; but the `TextButtons` do nothing when pressed but
-> input is still recorded by the `TextInputs`. This is something that I may or may not solve, since it is quite
+> input is still recorded by the `TextInputs`. This is something that I may or may not resolve, since it is quite
 > discouraging to have to create UI elements (in pygame) when other frameworks handle it quite easily.
