@@ -95,10 +95,11 @@ def on_remove():
         if not pq.is_empty():
             key = int(text_inputs[4].text)
             _, value = pq.remove(key_locator_dict[key])
-            dialog.set_message(f"({value.key}, {value.name})")
-            show_dialog()
             update_key_locator_dict()
             print_updates(tag="on_remove")
+
+            dialog.set_message(f"({value.key}, {value.name})")
+            show_dialog()
 
             text_inputs[4].clear()
         else:
@@ -123,10 +124,11 @@ def on_remove():
 def on_remove_min():
     if not pq.is_empty():
         key, value, _ = pq.remove_min()
-        dialog.set_message(f"({key}, {value.name})")
-        show_dialog()
         update_key_locator_dict()
         print_updates(tag="on_remove_min")
+
+        dialog.set_message(f"({key}, {value.name})")
+        show_dialog()
     else:
         print("on_remove_min: There is nothing to remove!")
         dialog.set_message("There is nothing to remove!")
