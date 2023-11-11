@@ -11,16 +11,7 @@ from text_button import TextButton
 from text_input import TextInput
 
 
-def remove_dialog():
-    global is_dialog_showing
-    is_dialog_showing = False
-
-
-def show_dialog():
-    global is_dialog_showing
-    is_dialog_showing = True
-
-
+# Utility methods
 def update_key_locator_dict():
     key_locator_dict.clear()
     for locator in pq.locators():
@@ -37,6 +28,17 @@ def print_updates(tag: str = ""):
         print(pq)
         print("sequential - " + pq.string_sequential())
         # print(key_locator_dict)
+
+
+# Button callbacks
+def remove_dialog():
+    global is_dialog_showing
+    is_dialog_showing = False
+
+
+def show_dialog():
+    global is_dialog_showing
+    is_dialog_showing = True
 
 
 def on_add():
@@ -159,19 +161,21 @@ def on_is_empty():
     print(f"is_empty={pq.is_empty()}")
 
 
+# pygame-specific setup
 pg.init()
 pg.display.set_caption("hospital-queue-visualization")
 SCREEN_SIZE = Vector2(800, 600)
-GROUND_HEIGHT = SCREEN_SIZE.y / 2
-
 screen = pg.display.set_mode(SCREEN_SIZE)
 clock = pg.time.Clock()
 MAX_FPS = 60
 
+# Background setup
+GROUND_HEIGHT = SCREEN_SIZE.y / 2
 sky_surface = pg.image.load("./assets/graphics/sky.png")
 sky_rectangle = sky_surface.get_rect()
 sky_rectangle.topleft = Vector2(0, 0)
 
+# TextInput setup
 KEY_TEXT_INPUT_SIZE = Vector2(50, 30)
 VALUE_TEXT_INPUT_SIZE = Vector2(100, 30)
 text_inputs = [
@@ -183,23 +187,26 @@ text_inputs = [
 
     TextInput(top_left=Vector2(120, 500), size=KEY_TEXT_INPUT_SIZE, font_size=30),
 ]
+focused_input: TextInput | None = None
+exists_focused_input = False
 
+# Label setup
 label_text_list = ["key", "value", "key", "new key", "key", "value"]
 labels = []
-
 for i in range(len(text_inputs)):
     rect = Rect(Vector2(0, 0), Vector2(text_inputs[i].size))
     rect.topleft = text_inputs[i].input_rectangle.bottomleft
     labels.append(Label(label_text_list[i], rect))
 
-focused_input: TextInput | None = None
-exists_focused_input = False
-
+# Data structure setup
 key_locator_dict: dict[int, AdaptablePriorityQueue.Locator] = dict()
 pq = AdaptablePriorityQueue()
+
+# Dialog setup
 dialog = Dialog(SCREEN_SIZE, on_dismiss=remove_dialog)
 is_dialog_showing = False
 
+# TextButton setup
 text_buttons = [
     TextButton(text="Add", top_left=Vector2(250, 400), on_click_handler=on_add, font_size=30, color="Black"),
     TextButton(text="Change priority", top_left=Vector2(250, 450), on_click_handler=on_update, font_size=30,
@@ -212,6 +219,7 @@ text_buttons = [
     TextButton(text="is_empty", top_left=Vector2(620, 400), on_click_handler=on_is_empty, font_size=30, color="Black")
 ]
 
+# Game loop
 while True:
     for event in pg.event.get():
         if event.type == pg.QUIT:
@@ -235,7 +243,7 @@ while True:
     screen.blit(sky_surface, sky_rectangle)
 
     # Horizontal line separating the visualization section and the manipulation section
-    pg.draw.line(screen, "Black", Vector2(0, SCREEN_SIZE.y / 2), Vector2(SCREEN_SIZE.x, SCREEN_SIZE.y / 2), 2)
+    pg.draw.line(screen, "Black", Vector2(0, GROUND_HEIGHT), Vector2(SCREEN_SIZE.x, GROUND_HEIGHT), 2)
 
     i = 0
     for _, patient_data, _ in pq:
