@@ -42,19 +42,25 @@ class TestMinHeapMethods(unittest.TestCase):
         self.assertEqual(previous_len - 1, len(min_heap))
 
     def test_constructor_with_elements(self):
-        min_heap = MinHeap([(4, "A"), (11, "C"), (1, "B")])
+        # Elements not maintaining heap order here. Need to find out why
+        min_heap = MinHeap([(11, "A"), (10, "B"), (67, "C"), (14, "D"), (55, "E"), (2, "F"), (27, "G")])
         self.assertEqual(3, len(min_heap))
         self.assertEqual((1, "B"), min_heap.min())
 
     def test_iterator(self):
-        elements = [(4, "A"), (11, "C"), (1, "B")]
-        min_heap = MinHeap(elements)
+        elements = [(11, "A"), (10, "B"), (67, "C"), (14, "D"), (55, "E"), (2, "F"), (27, "G")]
+        sorted_elements = sorted(elements)
+        min_heap = MinHeap()
+
+        for element in elements:
+            min_heap.insert(element[0], element[1])
+
         pairs = []
 
         for (k, v) in min_heap:
             pairs.append((k, v))
 
-        self.assertEqual(sorted(elements), pairs)
+        self.assertEqual(sorted_elements, pairs)
         self.assertEqual(len(elements), len(min_heap))
 
 
