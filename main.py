@@ -165,13 +165,12 @@ SCREEN_SIZE = Vector2(800, 600)
 GROUND_HEIGHT = SCREEN_SIZE.y / 2
 
 screen = pg.display.set_mode(SCREEN_SIZE)
+clock = pg.time.Clock()
+MAX_FPS = 60
 
 sky_surface = pg.image.load("./assets/graphics/sky.png")
 sky_rectangle = sky_surface.get_rect()
 sky_rectangle.topleft = Vector2(0, 0)
-
-clock = pg.time.Clock()
-MAX_FPS = 60
 
 KEY_TEXT_INPUT_SIZE = Vector2(50, 30)
 VALUE_TEXT_INPUT_SIZE = Vector2(100, 30)
@@ -182,8 +181,7 @@ text_inputs = [
     TextInput(top_left=Vector2(50, 450), size=KEY_TEXT_INPUT_SIZE, font_size=30),
     TextInput(top_left=Vector2(120, 450), size=KEY_TEXT_INPUT_SIZE, font_size=30),
 
-    TextInput(top_left=Vector2(50, 500), size=KEY_TEXT_INPUT_SIZE, font_size=30),
-    TextInput(top_left=Vector2(120, 500), size=VALUE_TEXT_INPUT_SIZE, font_size=30),
+    TextInput(top_left=Vector2(120, 500), size=KEY_TEXT_INPUT_SIZE, font_size=30),
 ]
 
 label_text_list = ["key", "value", "key", "new key", "key", "value"]
