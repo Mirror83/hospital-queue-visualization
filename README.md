@@ -24,5 +24,4 @@ event loop in main.py
 
 > [!NOTE]
 > When a dialog pops up, the other items are still focusable; but the `TextButton`s do nothing when pressed but
-> input is still recorded by the `TextInput`s. This is something that I may or may not resolve, since it is quite
-> discouraging to have to create UI elements (in pygame) when other frameworks handle it quite easily.
+> input is still recorded by the `TextInput`s. This is something that I may or may not resolve.
